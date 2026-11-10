@@ -1,0 +1,66 @@
+name: Construire Focus Terminale
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Récupérer le projet
+        uses: actions/checkout@v4
+
+      - name: Configurer Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Installer et configurer l'Android SDK manuellement
+        run: |
+          # Créer le répertoire SDK
+          mkdir -p $HOME/android-sdk/cmdline-tools
+          
+          # Télécharger les command-line tools pour Linux
+          wget https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O cmdline-tools.zip
+          
+          # Extraire dans le dossier tools
+          unzip -q cmdline-tools.zip -d temp_tools
+          mv temp_tools/cmdline-tools $HOME/android-sdk/cmdline-tools/latest
+          
+          # Configurer les variables d'environnement
+          echo "ANDROID_HOME=$HOME/android-sdk" >> $GITHUB_ENV
+          echo "$HOME/android-sdk/cmdline-tools/latest/bin" >> $GITHUB_PATH
+          echo "$HOME/android-sdk/platform-tools" >> $GITHUB_PATH
+
+      - name: Accepter les licences et installer les composants SDK
+        run: |
+          export ANDROID_HOME=$HOME/android-sdk
+          export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools
+          
+          yes | sdkmanager --licenses
+          sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
+
+      - name: Configurer Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Extraire le projet (si compressé)
+        run: |
+          if [ -f FocusTerminale-prototype-android.zip ]; then
+            unzip -o FocusTerminale-prototype-android.zip -d .
+          fi
+
+      - name: Rendre gradlew exécutable et compiler l'APK
+        run: |
+          cd FocusTerminale
+          chmod +x gradlew
+          ./gradlew :app:assembleDebug
+
+      - name: Sauvegarder le fichier APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Focus-Terminale-APK
+          path: FocusTerminale/app/build/outputs/apk/debug/*.apk
