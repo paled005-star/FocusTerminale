@@ -32,7 +32,7 @@ jobs:
           gradle-version: '8.9'
 
       - name: Extraire le projet
-        run: unzip -o FocusTerminale-prototype-android.zip -d .
+        run: unzip -o FocusTerminale-prototype-corrige.zip -d .
 
       - name: Compiler l'application
         run: gradle -p FocusTerminale :app:assembleDebug
