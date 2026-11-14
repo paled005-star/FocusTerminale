@@ -1,0 +1,53 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#102c55"><link rel="manifest" href="manifest.webmanifest"><title>Mon Espace Terminale</title>
+<style>
+:root{--n:#102c55;--g:#facc15;--bg:#f2f5fa;--line:#dce4ef}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#172033;font:16px system-ui}header{background:linear-gradient(130deg,#102c55,#1c528b);color:white;padding:24px 17px;border-radius:0 0 24px 24px}main{max-width:850px;margin:auto;padding:14px}.wrap{max-width:850px;margin:auto}h1{font-size:1.7rem;margin:0}header p{margin:7px 0 0;color:#dce8f8}.date{color:var(--g);font-weight:bold;margin-top:14px}.card{background:white;border:1px solid var(--line);border-radius:17px;padding:16px;margin:13px 0;box-shadow:0 4px 15px #102c5509}h2{font-size:1.1rem;color:var(--n);margin:0 0 12px}.quote{font:1.25rem/1.5 Georgia,serif;color:#17345d}.muted,small{color:#64748b;font-size:.85rem}.row{display:flex;gap:10px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}.row:last-child{border:0}.time{font-weight:bold;color:#31547c;min-width:110px;font-size:.9rem}button{border:0;border-radius:10px;padding:10px 13px;background:var(--n);color:white;font-weight:650;margin:5px 4px 0 0}.secondary{background:#e9eff8;color:var(--n)}.days{display:flex;gap:6px;overflow:auto}.days button{background:#e8eef7;color:#243b5b}.days button.active{background:var(--n);color:white}.progress{height:9px;background:#e7edf5;border-radius:20px;overflow:hidden}.progress span{display:block;height:100%;background:#13805b;width:0}textarea{width:100%;min-height:75px;border:1px solid var(--line);border-radius:10px;padding:10px;font:inherit}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}.tile{background:#f3f7fc;padding:12px;border-radius:12px}.hidden{display:none}footer{text-align:center;color:#64748b;padding:15px;font-size:.85rem}
+</style></head><body>
+<header><div class="wrap"><h1>Mon Espace Terminale</h1><p>Discipline · Régularité · Progression</p><div class="date" id="date"></div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px"><small id="net" style="color:#e4efff">Vérification de la connexion…</small><button id="install" class="secondary" style="display:none;margin:0">⬇ Installer l’application</button></div></div></header>
+<main>
+<section class="card"><h2>🌅 La pensée du jour</h2><div class="quote" id="q"></div><p class="muted" id="qa"></p><p class="muted" id="qs">La pensée enregistrée reste disponible hors connexion.</p><button id="refresh">Actualiser avec Internet</button><button class="secondary" id="reflectBtn">Ma réflexion</button><div id="reflectBox" class="hidden"><textarea id="reflect" placeholder="Que t'inspire cette pensée ?"></textarea><button id="save">Enregistrer</button></div></section>
+<section class="card"><h2>⬇ Installer sur mon téléphone</h2><p>Sur Android, ouvre cette page avec Chrome puis appuie sur « Installer l’application ». Si le bouton n’apparaît pas, ouvre le menu ⋮ de Chrome et choisis « Installer l’application » ou « Ajouter à l’écran d’accueil ».</p><p class="muted">Après une première ouverture avec Internet, le planning et les pensées enregistrées restent accessibles hors connexion.</p></section><section class="card"><h2>📚 Mon programme du jour <span id="day"></span></h2><div id="sessions"></div></section>
+<section class="card"><h2>🎯 Mes matières prioritaires</h2><div class="grid"><div class="tile"><b>Mathématiques</b><br>Comprendre et résoudre seul.</div><div class="tile"><b>Physique-Chimie</b><br>Maîtriser les méthodes.</div><div class="tile"><b>SVT</b><br>Comprendre et argumenter.</div></div><p class="muted">Sans abandonner le Français, l'Anglais, la Philosophie et l'Histoire-Géographie.</p></section>
+<section class="card"><h2>🧭 Ma méthode</h2><ol><li>Revoir les notions essentielles.</li><li>Traiter les exercices seul.</li><li>Comparer son raisonnement à la correction.</li><li>Comprendre et corriger ses erreurs.</li><li>Refaire un exercice sans aide.</li></ol></section>
+<section class="card"><h2>🗓️ Consulter une autre journée</h2><div class="days" id="days"></div><div id="other" class="hidden"></div></section>
+<footer>« Le succès est le fruit du travail bien organisé. »<br>En avant vers l'excellence !</footer></main>
+<script>
+const names=["Dimanche","Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi"];
+const plan={
+0:[["13h–14h","SVT","Préparation du lundi"],["18h–22h","Maths","Exercices et corrections"],["22h–00h","PC","Préparation du lundi"],["00h–1h","SVT","Révision complémentaire","night"]],
+1:[["10h–10h10","SVT","Rappel rapide"],["12h40–14h","SVT","Exercices"],["17h/18h–22h","SVT","Exercices et corrections"],["22h–1h","PC","Préparation et exercices"]],
+2:[["10h–10h10","SVT","Rappel rapide"],["12h40–14h","Histoire-Géo","Révision et exercices"],["22h–00h","SVT","Approfondissement"],["00h–2h","Maths","Préparation du mercredi","night"]],
+3:[["10h–10h10","Maths","Rappel rapide"],["12h40–14h","Maths","Exercices"],["22h–00h","Maths","Approfondissement"],["00h–2h","PC","Préparation du jeudi","night"]],
+4:[["10h–10h10","Maths","Rappel rapide"],["12h40–14h","Maths","Exercices"],["17h/18h–22h","Maths","Exercices et corrections"],["22h–1h","SVT","Approfondissement"]],
+5:[["10h–10h10","SVT","Rappel rapide"],["12h40–14h","SVT","Exercices"],["17h/18h–22h","SVT","Exercices et corrections"],["22h–1h","PC","Approfondissement"]],
+6:[["7h/8h–15h","Anglais, Philosophie et Français","Apprentissage et exercices"],["15h–1h","Matières en retard","Rattrapage et consolidation"]]
+};
+const thoughts=[
+"Comprendre une idée demande parfois plus de courage que de la répéter.",
+"La constance transforme les petits efforts en grands progrès.",
+"Une erreur examinée devient une leçon utile.",
+"Penser, c'est apprendre à questionner ses propres certitudes.",
+"Le savoir grandit lorsqu'on le partage et qu'on le met à l'épreuve.",
+"La patience donne au travail le temps de porter ses fruits.",
+"Chaque question précise est un pas vers la connaissance.",
+"La volonté ouvre le chemin ; la méthode aide à avancer.",
+"On progresse en comprenant ses erreurs, pas en les cachant.",
+"Apprendre, c'est accepter de changer sa manière de voir."
+];
+const $=x=>document.getElementById(x);
+let installPrompt=null;
+window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();installPrompt=e;$("install").style.display="inline-block";});
+$("install").addEventListener("click",async()=>{if(!installPrompt){alert("Sur Chrome : ouvre le menu ⋮ puis choisis « Installer l'application » ou « Ajouter à l'écran d'accueil ».");return;}installPrompt.prompt();await installPrompt.userChoice;installPrompt=null;$("install").style.display="none";});
+window.addEventListener("appinstalled",()=>{$("install").style.display="none";$("net").textContent="Application installée ✓";});
+const dateKey=()=>new Intl.DateTimeFormat("en-CA",{timeZone:"Africa/Ouagadougou"}).format(new Date());
+const now=()=>new Date(new Date().toLocaleString("en-US",{timeZone:"Africa/Ouagadougou"}));
+const weekday=()=>now().getDay();
+function quote(){let k=dateKey(),saved=JSON.parse(localStorage.getItem("dailyQuote")||"null"),idx=[...k].reduce((a,c)=>a+c.charCodeAt(0),0)%thoughts.length;let q=saved&&saved.date===k?saved.text:thoughts[idx];$("q").textContent="« "+q+" »";$("qa").textContent="— Pensée philosophique originale";$("qs").textContent=saved&&saved.date===k?"Pensée du jour enregistrée sur cet appareil. Elle reste visible hors connexion.":"Pensée de secours affichée. Connecte-toi pour actualiser celle du jour."}
+async function refresh(){let b=$("refresh");b.disabled=true;try{await fetch("https://www.google.com/generate_204",{mode:"no-cors",cache:"no-store"});let k=dateKey(),old=JSON.parse(localStorage.getItem("dailyQuote")||"null"),idx=old?thoughts.indexOf(old.text):-1;let q=thoughts[(idx+1+thoughts.length)%thoughts.length];localStorage.setItem("dailyQuote",JSON.stringify({date:k,text:q}));quote();$("qs").textContent="Nouvelle pensée enregistrée : tu peux maintenant la lire hors connexion."; $("net").textContent="En ligne · pensée enregistrée";}catch(e){$("net").textContent="Hors connexion";$("qs").textContent="Pas de connexion : la pensée enregistrée reste disponible. Réessaie plus tard."}b.disabled=false}
+function render(day,box){box.innerHTML="";let list=(plan[day]||[]).filter(x=>x[3]!=="night");list.forEach((s,i)=>{let r=document.createElement("div");r.className="row";let t=document.createElement("div");t.className="time";t.textContent=s[0];let v=document.createElement("div");v.style.flex="1";v.innerHTML="<b></b><br><small></small>";v.querySelector("b").textContent=s[1];v.querySelector("small").textContent=s[2];r.append(t,v);box.append(r)});}
+let d=weekday();$("date").textContent=new Intl.DateTimeFormat("fr-FR",{timeZone:"Africa/Ouagadougou",weekday:"long",day:"numeric",month:"long",year:"numeric"}).format(new Date());$("day").textContent="· "+names[d];render(d,$("sessions"),true);quote();
+if(now().getHours()<2){let prev=(d+6)%7,n=(plan[prev]||[]).find(x=>x[3]==="night");if(n){let p=document.createElement("p");p.className="muted";p.textContent="Séance nocturne prévue hier après minuit : "+n[0]+" · "+n[1]+" — "+n[2];$("sessions").prepend(p)}}
+names.forEach((name,i)=>{let b=document.createElement("button");b.textContent=name;b.className=i===d?"active":"";b.onclick=()=>{document.querySelectorAll("#days button").forEach(x=>x.classList.remove("active"));b.classList.add("active");$("other").classList.remove("hidden");$("other").innerHTML="<h3>"+name+"</h3>";render(i,$("other"))};$("days").append(b)});
+$("refresh").onclick=refresh;$("reflectBtn").onclick=()=>$("reflectBox").classList.toggle("hidden");$("reflect").value=localStorage.getItem("reflection-"+dateKey())||"";$("save").onclick=()=>{localStorage.setItem("reflection-"+dateKey(),$("reflect").value);$("save").textContent="Enregistré ✓"};
+$("net").textContent=navigator.onLine?"Connexion disponible":"Hors connexion";addEventListener("online",()=>$("net").textContent="Connexion disponible");addEventListener("offline",()=>$("net").textContent="Hors connexion");
+if("serviceWorker"in navigator&&location.protocol.startsWith("http"))navigator.serviceWorker.register("./sw.js").catch(()=>{});
+</script></body></html>

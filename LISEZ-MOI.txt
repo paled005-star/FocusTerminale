@@ -1,0 +1,15 @@
+MON ESPACE TERMINALE — APPLICATION INSTALLABLE
+
+Cette version ne comporte plus de cases à cocher.
+
+Installation sur Android :
+1. Dépose tous les fichiers de ce dossier sur Netlify (le site doit être servi en HTTPS).
+2. Ouvre l'adresse Netlify avec Chrome sur ton téléphone.
+3. Appuie sur « Installer l'application » si le bouton est proposé.
+   Sinon : menu ⋮ de Chrome > « Installer l'application » ou « Ajouter à l'écran d'accueil ».
+4. Ouvre l'application une première fois avec Internet pour mettre les fichiers en cache.
+
+Ensuite, l'application peut s'ouvrir depuis l'écran d'accueil et afficher le planning hors connexion.
+Les pensées enregistrées restent consultables hors connexion. L'actualisation d'une pensée nécessite Internet.
+
+Note : il s'agit d'une application web installable (PWA), pas d'un fichier APK Android.
